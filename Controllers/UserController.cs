@@ -4,6 +4,7 @@ using API_REST.Infrastructure.Data;
 using API_REST.Infrastructure.Models;
 using API_REST.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_REST.Controllers
 {
@@ -20,7 +21,7 @@ namespace API_REST.Controllers
         }
 
         [HttpPost]
-        public User Post(string password, string firstName, string lastName, string email, string userName)
+        public async Task<ActionResult<User>> Post(string password, string firstName, string lastName, string email, string userName)
         {
             if (password == null || firstName == null || lastName == null || email == null) 
             { 
@@ -39,16 +40,17 @@ namespace API_REST.Controllers
             };
 
             _masterContext.Add(user);
+            await _masterContext.SaveChangesAsync();
 
             return user;
         }
 
         [HttpGet]
-        public User Get(int id)
+        public async Task<ActionResult<User>> Get(int userId)
         {
             User user = new User();
 
-            user = _masterContext.Users.FirstOrDefault(x => x.Id == id);
+            user = await _masterContext.Users.FirstOrDefaultAsync(x => x.Id == userId).ConfigureAwait(true);
 
             return user;
         }

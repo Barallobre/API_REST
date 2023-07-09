@@ -1,19 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_REST.Models;
 
-public partial class MasterDataBaseContext :DbContext
+public partial class MasterContext : DbContext
 {
-    private readonly IConfiguration _config;
-    public MasterDataBaseContext(IConfiguration config)
+    public MasterContext()
     {
-        _config = config;
     }
 
-    public MasterDataBaseContext(IConfiguration config,DbContextOptions<MasterDataBaseContext> options)
+    public MasterContext(DbContextOptions<DbContext> options)
         : base(options)
     {
-        _config = config;
     }
 
     public virtual DbSet<User> Users { get; set; }
@@ -21,19 +20,17 @@ public partial class MasterDataBaseContext :DbContext
     public virtual DbSet<UserType> UserTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
+        => optionsBuilder.UseSqlServer("Data Source=CBARALLOBRE;Database=USERS;Integrated Security=True;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__USERS__3214EC27797A6133");
+            entity.HasKey(e => e.Id).HasName("PK__USERS__3214EC27AF49678A");
 
             entity.ToTable("USERS");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Active).HasColumnName("ACTIVE");
             entity.Property(e => e.Email)
                 .HasMaxLength(50)

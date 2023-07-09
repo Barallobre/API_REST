@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace API_REST.Models;
+namespace API_REST.Infrastructure.Models;
 
 public partial class User
 {

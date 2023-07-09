@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using API_REST.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace API_REST.Models;
+namespace API_REST.Infrastructure.Data;
 
 public partial class MasterContext : DbContext
 {
@@ -10,7 +11,7 @@ public partial class MasterContext : DbContext
     {
     }
 
-    public MasterContext(DbContextOptions<DbContext> options)
+    public MasterContext(DbContextOptions<MasterContext> options)
         : base(options)
     {
     }

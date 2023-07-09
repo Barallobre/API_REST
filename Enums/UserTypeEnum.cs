@@ -1,6 +1,6 @@
 ﻿namespace API_REST.Enums
 {
-    public enum UserType
+    public enum UserTypeEnum
     {
         None = 0,
         Ordinary = 1,

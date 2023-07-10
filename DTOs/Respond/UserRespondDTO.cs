@@ -1,11 +1,8 @@
-﻿
-namespace API_REST.Infrastructure.Models;
+﻿namespace API_REST.DTOs.Respond;
 
-public class User
+public class UserRespondDTO
 {
     public int Id { get; set; }
-
-    public string Password { get; set; } = null!;
 
     public string? FirstName { get; set; }
 
@@ -15,11 +12,8 @@ public class User
 
     public int? UserTypeId { get; set; }
 
-    public DateTime? EntryDate { get; set; }
-
     public bool? Active { get; set; }
 
     public string? UserName { get; set; }
 
-    public virtual UserType? UserType { get; set; }
 }

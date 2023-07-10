@@ -1,8 +1,10 @@
-using API_REST.Enums;
+using API_REST.DTOs.Request;
+using API_REST.DTOs.Respond;
 using API_REST.Exceptions;
 using API_REST.Infrastructure.Data;
 using API_REST.Infrastructure.Models;
 using API_REST.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,45 +16,50 @@ namespace API_REST.Controllers
     {   
         private readonly IRegisterInterface _register;
         private readonly MasterContext _masterContext;
-        public UserController(IRegisterInterface register, MasterContext masterContext) 
+        private readonly IMapper _mapper;
+        public UserController(IRegisterInterface register, MasterContext masterContext, IMapper mapper) 
         { 
             _register = register;
             _masterContext = masterContext;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> Post(string password, string firstName, string lastName, string email, string userName)
+        public async Task<ActionResult<UserRespondDTO>> PostNewUser(UserRequestDTO userRequestDTO)
         {
-            if (password == null || firstName == null || lastName == null || email == null) 
+            if (!ModelState.IsValid) 
             { 
                 throw new MissedDataException("Some neccesary data for registration is missing");
             }
-            User user = new User()
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                Email = email,
-                UserName = userName,
-                Password = password,
-                Active = true,
-                EntryDate = DateTime.UtcNow,
-                UserTypeId = (int)UserTypeEnum.Ordinary
-            };
 
+            var user = _mapper.Map<User>(userRequestDTO);
+   
             _masterContext.Add(user);
-            await _masterContext.SaveChangesAsync();
 
-            return user;
+            await _masterContext.SaveChangesAsync();
+            UserRespondDTO userRespondDTO = new UserRespondDTO();   
+            userRespondDTO = _mapper.Map<UserRespondDTO>(user);
+
+            return userRespondDTO;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<User>> Get(int userId)
+        [HttpGet("userId")]
+        public async Task<ActionResult<User>> GetUser(int userId)
         {
             User user = new User();
 
             user = await _masterContext.Users.FirstOrDefaultAsync(x => x.Id == userId).ConfigureAwait(true);
 
             return user;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<UserRespondDTO>>> GetUsers()
+        {
+            List<User> allUsers = _masterContext.Users.ToList();
+            var users = _mapper.Map<List<UserRespondDTO>>(allUsers);
+
+            return users;
         }
     }
 }

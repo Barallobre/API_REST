@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace API_REST.Infrastructure.Models;
 
-public partial class UserType
+public class UserType
 {
     public int Id { get; set; }
 

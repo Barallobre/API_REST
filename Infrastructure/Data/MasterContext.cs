@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using API_REST.Infrastructure.Models;
+﻿using API_REST.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_REST.Infrastructure.Data;

@@ -1,6 +1,10 @@
-﻿namespace API_REST.Interfaces
+﻿using API_REST.DTOs.Respond;
+using API_REST.Infrastructure.Models;
+
+namespace API_REST.Interfaces
 {
-    public class IRegisterInterface
+    public interface IRegisterInterface
     {
+        public Task<UserRespondDTO> Registration(User user);
     }
 }

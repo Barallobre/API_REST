@@ -17,6 +17,8 @@ namespace API_REST.Utils
 
         public static void CreatePassword(string password, out PasswordDTO passwordDTO)
         {
+       
+            
             passwordDTO = new PasswordDTO();
             using (var hmac = new HMACSHA512())
             {
@@ -27,39 +29,19 @@ namespace API_REST.Utils
 
         public static bool VerifyPassword(string password, string userName, List<User> allUsers)
         {
-            
             User user = allUsers.FirstOrDefault(x => x.UserName == userName);
 
-            var saltAndHash = GetPasswordSaltAndHash(user.Password);
+            //byte[] saltBytes = BitConverter.GetBytes(user.PasswordSalt.ToCharArray());
+            byte[] saltBytes = Encoding.UTF8.GetBytes(user.PasswordSalt);
+            byte[] hashBytes = Encoding.UTF8.GetBytes(user.PasswordHash);
 
-            using (var hmac = new HMACSHA512(Encoding.ASCII.GetBytes(saltAndHash.Item1)))
+            using (var hmac = new HMACSHA512(saltBytes))
             {
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(Encoding.ASCII.GetBytes(saltAndHash.Item2));
+
+                return computedHash.SequenceEqual(hashBytes);
             }
         }
-
-        public static (string,string) GetPasswordSaltAndHash(string password)
-        {
-            string salt = string.Empty;
-            string hash = string.Empty;
-            string stopAt = ".";
-
-            if (!String.IsNullOrWhiteSpace(password))
-            {
-                int charLocation = password.IndexOf(stopAt, StringComparison.Ordinal);
-
-                if (charLocation > 0)
-                {
-                    salt = password.Substring(0, charLocation);
-                    hash = password.Substring(charLocation+1, password.Last());
-
-                }
-            }
-
-            return (salt, hash);
-        }
-
     }
 
 }

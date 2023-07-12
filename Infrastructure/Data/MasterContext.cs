@@ -46,10 +46,14 @@ public partial class MasterContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("LAST_NAME");
-            entity.Property(e => e.Password)
-                .HasMaxLength(200)
+            entity.Property(e => e.PasswordHash)
+                .HasMaxLength(8000)
                 .IsUnicode(false)
-                .HasColumnName("PASSWORD");
+                .HasColumnName("PASSWORD_HASH");
+            entity.Property(e => e.PasswordSalt)
+                .HasMaxLength(8000)
+                .IsUnicode(false)
+                .HasColumnName("PASSWORD_SALT");
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
                 .IsUnicode(false)

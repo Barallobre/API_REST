@@ -28,14 +28,14 @@ namespace API_REST.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserRespondDTO>> RegisterNewUser(UserRequestDTO userRequestDTO)
         {
-            if (!ModelState.IsValid) 
-            { 
-                throw new MissedDataException("Some neccesary data for registration is missing");
-            }
+            //if (!ModelState.IsValid) 
+            //{ 
+            //    throw new MissedDataException("Some neccesary data for registration is missing");
+            //}
             try
             {
-                var user = _mapper.Map<User>(userRequestDTO);
-                var userRespondDTO = await _register.Registration(user).ConfigureAwait(true);
+                
+                var userRespondDTO = await _register.Registration(userRequestDTO).ConfigureAwait(true);
 
                 return userRespondDTO;
             }
@@ -72,7 +72,7 @@ namespace API_REST.Controllers
 
             bool exist = users.Any(x => x.UserName == userName);
 
-            if (!exist) 
+            if (!exist)
             {
                 throw new NotImplementedException();
             }

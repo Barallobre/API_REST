@@ -2,7 +2,7 @@
 
 public class UserRequestDTO
 {
-    public string Password { get; set; } = null!;
+    public string UserPassword { get; set; } = null!;
 
     public string? FirstName { get; set; }
 

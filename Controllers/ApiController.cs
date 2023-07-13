@@ -42,6 +42,10 @@ namespace API_REST.Controllers
 
                 return userRespondDTO;
             }
+            catch (UserNotValidException ex)
+            {
+                throw new UserNotValidException("This name user is already taken");
+            }
             catch (Exception ex) 
             {
                 throw new MissedDataException("Some neccesary data for registration is missing", ex);

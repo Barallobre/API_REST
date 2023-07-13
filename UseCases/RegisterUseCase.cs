@@ -1,6 +1,7 @@
 ﻿using API_REST.DTOs;
 using API_REST.DTOs.Request;
 using API_REST.DTOs.Respond;
+using API_REST.Exceptions;
 using API_REST.Infrastructure.Data;
 using API_REST.Infrastructure.Models;
 using API_REST.Interfaces;
@@ -25,6 +26,13 @@ namespace API_REST.UseCases
 
         public async Task<UserRespondDTO> Registration(UserRequestDTO userRequestDTO)
         {
+            List<User> allUsers = _masterContext.Users.ToList();
+            User userAlreadyExists = allUsers.FirstOrDefault(x => x.UserName == userRequestDTO.UserName);
+
+            if (userAlreadyExists != null)
+            {
+                throw new UserNotValidException();
+            }
 
             PasswordTools.CreatePassword(userRequestDTO.UserPassword, out PasswordDTO passwordDTO);
        

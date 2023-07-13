@@ -1,4 +1,5 @@
 ﻿using API_REST.DTOs;
+using API_REST.DTOs.Request;
 using API_REST.Infrastructure.Data;
 using API_REST.Infrastructure.Models;
 using System.Security.Cryptography;
@@ -27,17 +28,21 @@ namespace API_REST.Utils
             }
         }
 
-        public static bool VerifyPassword(string password, string userName, List<User> allUsers)
+        public static bool VerifyPassword(UserLoginDTO userLoginDTO, List<User> allUsers)
         {
-            User user = allUsers.FirstOrDefault(x => x.UserName == userName);
+            if (userLoginDTO == null || allUsers.Count == 0)
+            {
+                throw new ArgumentNullException(nameof(userLoginDTO));
+            }
 
-            //byte[] saltBytes = BitConverter.GetBytes(user.PasswordSalt.ToCharArray());
-            byte[] saltBytes = Encoding.UTF8.GetBytes(user.PasswordSalt);
-            byte[] hashBytes = Encoding.UTF8.GetBytes(user.PasswordHash);
+            User user = allUsers.FirstOrDefault(x => x.UserName == userLoginDTO.UserName);
+
+            byte[] saltBytes = user.PasswordSalt;
+            byte[] hashBytes = user.PasswordHash;
 
             using (var hmac = new HMACSHA512(saltBytes))
             {
-                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(userLoginDTO.UserPassword));
 
                 return computedHash.SequenceEqual(hashBytes);
             }

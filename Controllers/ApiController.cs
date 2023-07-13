@@ -28,10 +28,10 @@ namespace API_REST.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserRespondDTO>> RegisterNewUser(UserRequestDTO userRequestDTO)
         {
-            //if (!ModelState.IsValid) 
-            //{ 
-            //    throw new MissedDataException("Some neccesary data for registration is missing");
-            //}
+            if (!ModelState.IsValid)
+            {
+                throw new MissedDataException("Some neccesary data for registration is missing");
+            }
             try
             {
                 
@@ -66,18 +66,18 @@ namespace API_REST.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(string userName, string password)
+        public async Task<ActionResult<string>> Login(UserLoginDTO userLoginDTO)
         {
             List<UserRespondDTO> users = GetAllUsers();
 
-            bool exist = users.Any(x => x.UserName == userName);
+            bool exist = users.Any(x => x.UserName == userLoginDTO.UserName);
 
             if (!exist)
             {
                 throw new NotImplementedException();
             }
             List<User> allUsers = _masterContext.Users.ToList();
-            bool login = PasswordTools.VerifyPassword(password, userName, allUsers);
+            bool login = PasswordTools.VerifyPassword(userLoginDTO, allUsers);
             if (!login)
             {
                 return "Incorrect credentials";

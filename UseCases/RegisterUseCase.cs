@@ -29,8 +29,8 @@ namespace API_REST.UseCases
             PasswordTools.CreatePassword(userRequestDTO.UserPassword, out PasswordDTO passwordDTO);
        
             var user = _mapper.Map<User>(userRequestDTO);
-            user.PasswordHash = Convert.ToBase64String(passwordDTO.PasswordHash);
-            user.PasswordSalt = Convert.ToBase64String(passwordDTO.PasswordSalt);
+            user.PasswordHash = passwordDTO.PasswordHash;
+            user.PasswordSalt = passwordDTO.PasswordSalt;
 
             _masterContext.Add(user);
             await _masterContext.SaveChangesAsync();

@@ -1,5 +1,6 @@
 using API_REST.Infrastructure.Data;
 using API_REST.Interfaces;
+using API_REST.Services;
 using API_REST.UseCases;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -18,8 +19,9 @@ builder.Services.AddDbContext<MasterContext>(options =>
 });
 
 builder.Services.AddScoped<IRegisterInterface, RegisterUseCase>();
+builder.Services.AddScoped<ITokenServiceInterface, TokenService>();
 builder.Services.AddScoped<IMapper, Mapper>();
-
+var configuration = builder.Configuration;
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

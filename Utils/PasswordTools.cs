@@ -28,14 +28,14 @@ namespace API_REST.Utils
             }
         }
 
-        public static bool VerifyPassword(UserLoginDTO userLoginDTO, List<User> allUsers)
+        public static bool VerifyPassword(UserLoginDTO userLoginDTO, User user)
         {
-            if (userLoginDTO == null || allUsers.Count == 0)
+            if (userLoginDTO == null || user == null)
             {
                 throw new ArgumentNullException(nameof(userLoginDTO));
             }
 
-            User user = allUsers.FirstOrDefault(x => x.UserName == userLoginDTO.UserName);
+            
 
             byte[] saltBytes = user.PasswordSalt;
             byte[] hashBytes = user.PasswordHash;

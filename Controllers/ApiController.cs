@@ -4,6 +4,7 @@ using API_REST.Exceptions;
 using API_REST.Infrastructure.Data;
 using API_REST.Infrastructure.Models;
 using API_REST.Interfaces;
+using API_REST.Services;
 using API_REST.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +19,13 @@ namespace API_REST.Controllers
         private readonly IRegisterInterface _register;
         private readonly MasterContext _masterContext;
         private readonly IMapper _mapper;
-        public ApiController(IRegisterInterface register, MasterContext masterContext, IMapper mapper) 
+        private readonly ITokenServiceInterface _tokenService;
+        public ApiController(IRegisterInterface register, MasterContext masterContext, IMapper mapper, ITokenServiceInterface tokenService) 
         { 
             _register = register;
             _masterContext = masterContext;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
@@ -77,12 +80,16 @@ namespace API_REST.Controllers
                 throw new NotImplementedException();
             }
             List<User> allUsers = _masterContext.Users.ToList();
-            bool login = PasswordTools.VerifyPassword(userLoginDTO, allUsers);
+            User user = allUsers.FirstOrDefault(x => x.UserName == userLoginDTO.UserName);
+            bool login = PasswordTools.VerifyPassword(userLoginDTO, user);
             if (!login)
             {
                 return "Incorrect credentials";
             }
-            return "You are logged in";
+
+            string token = _tokenService.CreateToken(user);
+
+            return Ok(token);
         }
     }
 }
